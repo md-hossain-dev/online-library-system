@@ -16,8 +16,9 @@ class User(AbstractUser):
 
 class Book(models.Model):
 	title = models.CharField(max_length=250,null=True,blank=True)
-	user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='book')
+	author = models.ForeignKey(User, on_delete=models.CASCADE,related_name='book')
 	published_date = models.DateField()
+	genre = models.CharField(max_length=100)
 	is_archived = models.BooleanField(default=False)
 
 	def __str__(self):

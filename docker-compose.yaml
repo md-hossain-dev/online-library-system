@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    image: postgres
+    image: postgres:latest
     environment:
       POSTGRES_DB: library
       POSTGRES_USER: library
@@ -12,9 +12,20 @@ services:
     networks:
       - app-network
 
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
   web:
     build: .
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: >
+      sh -c "./wait-for-it.sh db:5432 -- 
+             ./wait-for-it.sh redis:6379 -- 
+             python manage.py migrate && 
+             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
       - ./geoip:/app/geoip
@@ -24,14 +35,7 @@ services:
       - db
       - redis
     environment:
-      - DJANGO_SETTINGS_MODULE=online_library_system.settings 
-    networks:
-      - app-network
-
-  redis:
-    image: redis:alpine
-    ports:
-      - "6379:6379"
+      - DJANGO_SETTINGS_MODULE=online_library_system.settings
     networks:
       - app-network
 

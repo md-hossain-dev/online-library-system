@@ -1,12 +1,12 @@
-from rest_framework import serializers, viewsets
+from rest_framework import serializers
+from .models import User, Book
 
-
-class UserSerializer(serializers.ModelSerializer):
+class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'email', 'date_of_birth']
+        fields = '__all__'
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['title', 'user', 'published_date','is_archived']
+        model = Book
+        fields = '__all__'

@@ -1,6 +1,7 @@
 from django.apps import AppConfig
 
-
 class LibraryConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'library'
+    name = 'books'
+
+    def ready(self):
+        import books.signals  # Import signals to activate them
